@@ -36,7 +36,21 @@ class FormValidator {
             this.setStatus(field,null,"success")
         }
         // Time to check that the entry is the correct input type
-        this.validateEntry(field);
+        if(field.type == "email"){
+            const re = /\S+@\S+.\S+/
+            re.test(field.value) ? this.setStatus(field,null,'success') : this.setStatus(field,"Enter a valid email address","error");
+        }
+        if(field.id === 'password_confirmation'){
+            const passwordField = document.querySelector("#password");
+            if(field.value.trim() === '' ){ 
+                this.setStatus(field,"Password confirmation required",'error');
+            }   else if(field.value != passwordField.value){
+                this.setStatus(field,"Password does not match",'error');
+            }else{
+                this.setStatus(field,null,'success');
+
+            }
+        }
     }
     setStatus(field, message, status){
         const successIcon = field.parentElement.querySelector('.icon-success');
@@ -55,22 +69,7 @@ class FormValidator {
             errorIcon.classList.remove('hidden');
             field.classList.add('input-error');
         }
-    }
-    validateEntry(field){
-        switch (field.id) { //Checking if email is correct and passwords matches
-            case 'email':
-                const re = /\S+@\S+.\S+/
-                re.test(field.value) ? this.setStatus(field,null,'success') : this.setStatus(field,"Enter a valid email address","error");
-                break;
-            case 'password_confirmation': 
-                   const passwordField = this.form.querySelector('#password');
-                   console.log(field.value);
-                   console.log(passwordField.value);
-                   field.value.trim() === passwordField.value ? this.setStatus(field,null,'success') : this.setStatus(field,"Passwords not matching",'error');
-            default:
-                //this.setStatus(field,null,'success');
-                break;
-        }
+    
     }
 }
 
